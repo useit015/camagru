@@ -3,17 +3,19 @@
 class Pages extends Controller {
 
 	public function __construct() {
-
+		
 	}
 
 	public function index() {
+		if (isLoggedIn())
+			redirect('posts');
 		$data = [
 			'title' => 'Camagru',
 			'description' => 'Simple instagram like app'
 		];
 		$this->view('pages/index', $data);
 	}
-	
+
 	public function about() {
 		$data = [
 			'title' => 'About us',
