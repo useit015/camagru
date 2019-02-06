@@ -3,15 +3,46 @@ CREATE TABLE `camagru`.`users` (
 	`name` VARCHAR(255) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	`password` VARCHAR(255) NOT NULL,
+	`img` VARCHAR(255) NOT NULL,
+	`number` VARCHAR(255),
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`verified` tinyint(1) NOT NULL DEFAULT 0,
+	`vkey` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `camagru`.`posts` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`user_id` INT NOT NULL,
-	`title` VARCHAR(255) NOT NULL,
-	`body` TEXT NOT NULL,
+	`img` VARCHAR(255) NOT NULL,
+	`likeCount` INT NOT NULL DEFAULT 0 ,
+	`cmntCount` INT NOT NULL DEFAULT 0 ,
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `camagru`.`pwdReset` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`email` VARCHAR(255) NOT NULL ,
+	`selector` VARCHAR(255) NOT NULL ,
+	`token` VARCHAR(255) NOT NULL ,
+	`expires` INT NOT NULL ,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `camagru`.`likes` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`user_id` INT NOT NULL ,
+	`post_id` INT NOT NULL ,
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `camagru`.`comments` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`user_id` INT NOT NULL ,
+	`post_id` INT NOT NULL ,
+	`body` TEXT NOT NULL ,
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`)
 );

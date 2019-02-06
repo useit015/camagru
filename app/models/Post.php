@@ -2,6 +2,7 @@
 
 class Post {
 	private $db;
+	private $allowed = ['jpg', 'jpeg', 'png', 'pdf'];
 
 	public function __construct() {
 		$this->db = new Database();
@@ -11,6 +12,8 @@ class Post {
 		$this->db->query('SELECT *,
 						posts.id as postId,
 						users.id as userId,
+						users.name as userName,
+						posts.img as postImg,
 						posts.created_at as postCreated,
 						users.created_at as userCreated
 						FROM posts
@@ -21,10 +24,9 @@ class Post {
 	}
 
 	public function addPost($data) {
-		$this->db->query('INSERT INTO posts (title, user_id, body) VALUES (:title, :user_id, :body)');
-		$this->db->bind(':title', $data['title']);
+		$this->db->query('INSERT INTO posts (user_id, img) VALUES (:user_id, :img)');
+		$this->db->bind(':img', $data['image']);
 		$this->db->bind(':user_id', $data['user_id']);
-		$this->db->bind(':body', $data['body']);
 		return $this->db->execute();
 	}
 
@@ -48,6 +50,30 @@ class Post {
 		return $this->db->execute();
 	}
 
+	public function uploadImage($file) {
+		$name = $file['name'];
+		$tmpName = $file['tmp_name'];
+		$size = $file['size'];
+		$err = $file['err'];
+		$type = $file['type'];
+		$ext = strtolower(end(explode('.', $name)));
+		if (in_array($ext, $this->allowed) && !$err && $size < 5000000) {
+			$dest = 'uploads/'.uniqid('', true).'.'.$ext;
+			move_uploaded_file($tmpName, dirname(dirname(APPROOT)).'/'.$dest);
+			return $dest;
+		} else {
+			return false;
+		}
+	}
+
+	function saveImage64($data){
+		list($type, $data) = explode(';', $data);
+		list(,$ext) = explode('/', $type);
+		list(,$data) = explode(',', $data);
+		$dest = 'uploads/'.uniqid('', true).'.'.$ext;
+		file_put_contents(dirname(dirname(APPROOT)).'/'.$dest, base64_decode($data));
+		return $dest;
+	}
 }
 
 ?>

@@ -21,19 +21,22 @@ class Posts extends Controller {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			$data = [
-				'title' => trim($_POST['title']),
-				'body' => trim($_POST['body']),
+				'super' => $_POST['super'],
 				'user_id' => $_SESSION['user_id'],
-				'title_err' => '',
-				'body_err' => ''
+				'x' => $_POST['x'],
+				'y' => $_POST['y'],
+				'image_err' => ''
 			];
-			if (empty($data['title'])) {
-				$data['title_err'] = 'Please enter title';
+			if ($_POST['type']) {
+				$data['image'] = $this->postModel->uploadImage($_FILES['image']);
+			} else {
+				$data['image'] = $this->postModel->saveImage64($_POST['imageData']);
 			}
-			if (empty($data['body'])) {
-				$data['body_err'] = 'Please enter body text';
+			watermark(dirname(dirname(APPROOT)).'/'.$data['image'], $data['super'], $data['x'], $data['y']);
+			if (empty($data['image'])) {
+				$data['image_err'] = 'Please upload an image';
 			}
-			if (empty($data['title_err']) && empty($data['body_err'])) {
+			if (empty($data['image_err'])) {
 				if ($this->postModel->addPost($data)) {
 					flash('post_message', 'Post Added');
 					redirect('posts');
@@ -53,7 +56,9 @@ class Posts extends Controller {
 	}
 
 
-	public function edit($id) {
+	public function edit($id = -1) {
+		if ($id == -1)
+			redirect('posts');
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			$data = [
@@ -93,7 +98,9 @@ class Posts extends Controller {
 		}
 	}
 
-	public function show($id) {
+	public function show($id = -1) {
+		if ($id == -1)
+			redirect('posts');
 		$post = $this->postModel->getPostById($id);
 		$user = $this->userModel->getUserById($post->user_id);
 		$data = [
@@ -103,8 +110,9 @@ class Posts extends Controller {
 		$this->view('posts/show', $data);
 	}
 
-	public function delete($id) {
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	public function delete($id = -1) {
+		if ($_SERVER['REQUEST_METHOD'] == 'POST' && $id !== -1) {
+			$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 			$post = $this->postModel->getPostById($id);
 			if ($post->user_id != $_SESSION['user_id'])
 				redirect('posts');
