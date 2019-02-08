@@ -9,11 +9,13 @@ class Post {
 	}
 
 	public function getPosts() {
-		$this->db->query('SELECT *,
+		$this->db->query('SELECT
 						posts.id as postId,
 						users.id as userId,
 						users.name as userName,
 						posts.img as postImg,
+						posts.cmntCount as postCmntCount,
+						posts.likeCount as postLikeCount,
 						posts.created_at as postCreated,
 						users.created_at as userCreated
 						FROM posts
@@ -47,6 +49,59 @@ class Post {
 	public function deletePost($id) {
 		$this->db->query('DELETE FROM posts WHERE id = :id');
 		$this->db->bind(':id', $id);
+		return $this->db->execute();
+	}
+
+	public function getPostComments($id) {
+		$this->db->query('SELECT 
+						comments.id as cmntId,
+						comments.body as cmntBody,
+						comments.created_at as cmntCreated,
+						comments.user_id as userId,
+						users.name as userName,
+						users.img as userImg
+						FROM comments, users
+						WHERE comments.post_id = :id
+						AND users.id = comments.user_id
+						ORDER BY comments.created_at DESC');
+		$this->db->bind(':id', $id);
+		return $this->db->resultSet();
+	}
+
+	public function addLike($like) {
+		$this->db->query('INSERT INTO likes (user_id, post_id) VALUES (:user_id, :post_id)');
+		$this->db->bind(':user_id', $like['user_id']);
+		$this->db->bind(':post_id', $like['post_id']);
+		return $this->db->execute();
+	}
+
+	public function unlikePost($post, $user) {
+		$this->db->query('DELETE FROM likes WHERE user_id = :user_id AND post_id = :post_id');
+		$this->db->bind(':user_id', $user);
+		$this->db->bind(':post_id', $post);
+		return $this->db->execute();
+	}
+
+	public function userLikes($post, $user) {
+		$this->db->query('SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id');
+		$this->db->bind(':user_id', $user);
+		$this->db->bind(':post_id', $post);
+		$this->db->execute();
+		return $this->db->rowCount();
+	}
+
+	public function addComment($comment) {
+		$this->db->query('INSERT INTO comments (user_id, post_id, body) VALUES (:user_id, :post_id, :body)');
+		$this->db->bind(':user_id', $comment['user_id']);
+		$this->db->bind(':post_id', $comment['post_id']);
+		$this->db->bind(':body', $comment['body']);
+		return $this->db->execute();
+	}
+
+	public function deleteComment($comment, $user) {
+		$this->db->query('DELETE FROM comments WHERE id = :id AND user_id = :user_id');
+		$this->db->bind(':id', $comment);
+		$this->db->bind(':user_id', $user);
 		return $this->db->execute();
 	}
 

@@ -5,7 +5,7 @@
 	<form action="<?php echo URLROOT; ?>/posts/add" method="post" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-6 canvas_container">
-				<img class="canvas_sup">
+				<img class="canvas_sup" draggable="true">
 				<canvas class="photo"></canvas>
 				<video class="player"></video>
 			</div>

@@ -20,6 +20,16 @@
 					<div class="gallery-item-details fadeIn-bottom fadeIn-left">
 						<h3>By: <?php echo $post->userName; ?></h3>
 						<p><?php echo time_elapsed_string($post->postCreated); ?></p>
+						<div class="gallery-item-details_interaction">
+							<div class="gallery-item-details_like">
+								<i class="fa fa-thumbs-up pb-3 px-3 pt-1 gallery-item-details_like-icon"></i>
+								<span><?php echo $post->postLikeCount; ?></span>
+							</div>
+							<div class="gallery-item-details_cmnt">
+								<i class="fa fa-comment pb-3 px-3 gallery-item-details_cmnt-icon"></i>
+								<span><?php echo $post->postCmntCount; ?></span>
+							</div>
+						</div>
 					</div>
 				</a>
 			</div>

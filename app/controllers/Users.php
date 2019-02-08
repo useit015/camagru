@@ -145,7 +145,6 @@ class Users extends Controller {
 				'token' => random_bytes(32),
 				'expires' => date('U') + 3600 // expires in 1 hour
 			];
-			echo $data['expires'];
 			$data['url'] = URLROOT.'/users/reset_password/'.$data['selector'].'_'.bin2hex($data['token']);
 			$data['token'] = password_hash($data['token'], PASSWORD_DEFAULT);
 			if (sendResetMail($data) &&  $this->userModel->createResetToken($data)) {

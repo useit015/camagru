@@ -87,6 +87,8 @@
 	left: 50%;
 	width: 33%;
 	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
 }
 
 .photo {
@@ -101,8 +103,6 @@
 	width: 5rem;
 }
 
-
-
 .gallery {
 	display: flex;
 	flex-wrap: wrap;
@@ -114,6 +114,10 @@
 	margin: 1rem;
 	overflow: hidden;
 	border-radius: 3px;
+	position: relative;
+}
+
+.main_img-container {
 	position: relative;
 }
 
@@ -137,17 +141,17 @@
 	}
 }
 
-
-input[type=radio]:checked+label {
+input[type=radio]:checked + label {
 	transform: scale(0);
+	-webkit-transform: scale(0);
+	-moz-transform: scale(0);
 }
 
-
-
-.gallery-item .gallery-item-overlay {
-	background: rgba(0, 0, 0, 0.7);
+.gallery-item .gallery-item-overlay,
+.main_img-container .main_img-overlay {
+	background: rgba(0, 0, 0, .4);
 	position: absolute;
-	height: 99%;
+	height: 100%;
 	width: 100%;
 	left: 0;
 	top: 0;
@@ -159,15 +163,22 @@ input[type=radio]:checked+label {
 	transition: all 0.4s ease-in-out 0s;
 }
 
-.gallery-item:hover .gallery-item-overlay {
+.gallery-item:hover .gallery-item-overlay,
+.main_img-container:hover .main_img-overlay {
 	opacity: 1;
+}
+
+.main_img-img, .main_img-overlay {
+	border-radius: 2.5rem;
+	width: 100%;
 }
 
 .gallery-item-image {
 	width: 100%;
 }
 
-.gallery-item-details {
+.gallery-item-details,
+.main_img-details {
 	position: absolute;
 	text-align: center;
 	padding-left: 1em;
@@ -179,17 +190,103 @@ input[type=radio]:checked+label {
 	-webkit-transform: translate(-50%, -50%);
 	-moz-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	-webkit-transition: all 0.3s ease-in-out 0s;
-	-moz-transition: all 0.3s ease-in-out 0s;
-	transition: all 0.3s ease-in-out 0s;
+	-webkit-transition: all .3s ease-in-out;
+	-moz-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+}
+
+.main_img-details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.main_img-details > .up,
+.main_img-details > .down {
+	display: flex;
+	justify-content: space-around;
+	align-items: flex-start;
+}
+
+.main_img-details > .down {
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.main_img-details_back,
+.main_img-details_edit,
+.main_img-details_del,
+.main_img-details_like,
+.like_count {
+	padding: .5rem 1rem;
+	color: rgba(255, 255, 255, .4);
+	font-size: 3rem;
+	cursor: pointer;
+	transition: all .3s ease-in-out;
+	-webkit-transition: all .3s ease-in-out;
+	-moz-transition: all .3s ease-in-out;
+}
+
+.main_img-details_like.active {
+	color: #417fff;
+}
+
+.like_count {
+	padding: 0;
+}
+
+.main_img-details_back:hover,
+.main_img-details_edit:hover,
+.main_img-details_del:hover,
+.main_img-details_like:hover {
+	color: rgba(255, 255, 255, .9);
+	transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-moz-transform: scale(1.2);
+}
+
+.main_img-details_like:focus {
+	outline: none;
+}
+
+.main_img-details_like.active:hover {
+	color: #ff414b;
+	transform: rotate(-180deg) scale(.85) translateY(-1rem);
+	-webkit-transform: rotate(-180deg) scale(.85) translateY(-1rem);
+	-moz-transform: rotate(-180deg) scale(.85) translateY(-1rem);
+}
+
+.main_img-details_like {
+	font-size: 4rem;
+}
+
+.main_img-details_back {
+	order: -1;
+	margin-right: auto;
+}
+
+.main_img-details_del,
+.main_img-details_like {
+	background: none;
+	border: none;
 }
 
 .gallery-item:hover .gallery-item-details {
-	top: 50%;
+	top: 60%;
 	left: 50%;
 	opacity: 1;
 }
 
+.main_img-container:hover .main_img-details {
+	height: 100%;
+	top: 0%;
+	left: 50%;
+	opacity: 1;
+	transform: translate(-50%, 0);
+	-webkit-transform: translate(-50%, 0);
+	-moz-transform: translate(-50%, 0);
+}
 
 .gallery-item-details h3 {
 	color: #fff;
@@ -202,10 +299,149 @@ input[type=radio]:checked+label {
 	font-size: 0.8em;
 }
 
+.gallery-item-details_interaction {
+	display: flex;
+	justify-content: center;
+}
+
+.gallery-item-details_like, .gallery-item-details_cmnt {
+	color: white;
+	display: flex;
+	flex-direction: column;
+}
+.gallery-item-details_like-icon, .gallery-item-details_cmnt-icon {
+	font-size: 2rem;
+}
+
 .fadeIn-bottom {
 	top: 80%;
 }
 
 .fadeIn-left {
 	left: 20%;
+}
+
+.cmnt {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.cmnt-img_container {
+	width: 3.5rem;
+	height: 3.5rem;
+	flex-grow: 0;
+}
+
+.cmnt-body {
+	flex-grow: 1;
+	flex-basis: 20em;
+	border-radius: 2rem;
+	background: #F2F3F5;
+	line-height: 1.5;
+	position: relative;
+	/* box-shadow: 0 1px 3px rgba(52, 58, 64, .3); */
+}
+
+.cmnt-time, .img-time {
+	font-size: .9rem;
+	color: #707070;
+	position: absolute;
+	top: 101%;
+	right: 1%;
+}
+
+.cmnt-body .lead {
+	color: #343A40;
+}
+
+.cmnt-img {
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	background-position: center;
+	background-size: cover;
+	/* box-shadow: 0 .5px 3px rgba(52, 58, 64, .5),
+				0 1px 6px rgba(52, 58, 64, .2); */
+}
+
+.cmnt-del {
+	position: absolute;
+	top: .75rem;
+	right: -1.25rem;
+	transform: translate(-50%, -50%);
+}
+
+.cmnt-del_btn {
+	cursor: pointer;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+}
+
+#comment {
+	border-radius: 2rem;
+	background: #F2F3F5;
+	padding-right: 4rem;
+	padding-left: 1.5rem;
+	/* box-shadow: inset 0 .5px 3px rgba(52, 58, 64, .2); */
+}
+
+#comment:focus {
+	outline: none;
+}
+
+.cmnt-input {
+	flex-grow: 1;
+	flex-basis: 20em;
+	position: relative;
+}
+
+.cmnt-submit {
+	height: 100%;
+	position: absolute;
+	top: 50%;
+	right: .5%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	border: none;
+	background: transparent;
+	width: 2.5rem;
+	cursor: pointer;
+}
+
+.cmnt-submit_icon {
+	color: #343A40;
+	transform: scale(2);
+	-webkit-transform: scale(2);
+	-moz-transform: scale(2);
+	transition: all .3s ease-in;
+	-webkit-transition: all .3s ease-in;
+	-moz-transition: all .3s ease-in;
+}
+
+.invalid-feedback,
+.cmnt-feedback {
+	position: absolute;
+	top: 105%;
+	left: 2%;
+}
+
+.cmnt-submit:focus {
+	outline: none;
+}
+
+.cmnt-submit:hover .cmnt-submit_icon,
+.cmnt-submit:focus .cmnt-submit_icon {
+	transform: scale(2.2) rotate(20deg) translateY(-2px);
+	-webkit-transform: scale(2.2) rotate(20deg) translateY(-2px);
+	-moz-transform: scale(2.2) rotate(20deg) translateY(-2px);
+	color: #424950;
+}
+
+.alert {
+	border-radius: 2rem;
 }
