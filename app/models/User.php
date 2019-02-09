@@ -19,7 +19,7 @@ class User {
 	}
 
 	public function login($email, $password) {
-		$this->db->query('SELECT * FROM users WHERE email = :email and verified = 1');
+		$this->db->query('SELECT * FROM users WHERE email = :email AND verified = 1');
 		$this->db->bind(':email', $email);
 		$row = $this->db->single();
 		if (password_verify($password, $row->password))
@@ -46,8 +46,16 @@ class User {
 	}
 
 	public function verifyUser($key) {
-		$this->db->query('UPDATE users SET verified = 1 WHERE vkey = :vkey and verified = 0');
+		$this->db->query('UPDATE users SET verified = 1 WHERE vkey = :vkey AND verified = 0');
 		$this->db->bind(':vkey', $key);
+		return $this->db->execute();
+	}
+
+	public function unVerifyUser($data) {
+		$this->db->query('UPDATE users SET email = :email, verified = 0, vkey = :vkey WHERE id = :id');
+		$this->db->bind(':email', $data['email']);
+		$this->db->bind(':vkey', $data['vkey']);
+		$this->db->bind(':id', $data['id']);
 		return $this->db->execute();
 	}
 

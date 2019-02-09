@@ -1,11 +1,15 @@
+* {
+	box-sizing: border-box;
+}
+
 .profile {
 	position: relative;
 	cursor: pointer;
 }
 
 .profile-img_container {
-	width: 2.2rem;
-	height: 2.2rem;
+	width: 1.68rem;
+	height: 1.68rem;
 	border-radius: 50%;
 	box-shadow: 0 0 0 4px #343A40,
 		0 0 0 5.5px white;
@@ -171,6 +175,7 @@ input[type=radio]:checked + label {
 .main_img-img, .main_img-overlay {
 	border-radius: 2.5rem;
 	width: 100%;
+	min-height: 15rem;
 }
 
 .gallery-item-image {
@@ -369,8 +374,8 @@ input[type=radio]:checked + label {
 
 .cmnt-del {
 	position: absolute;
-	top: .75rem;
-	right: -1.25rem;
+	top: .5rem;
+	right: -1.5rem;
 	transform: translate(-50%, -50%);
 }
 
@@ -379,6 +384,11 @@ input[type=radio]:checked + label {
 	background: none;
 	border: none;
 	font-size: 1.5rem;
+	color: #343A40;
+}
+
+.cmnt-del_btn:focus {
+	outline: none;
 }
 
 #comment {
@@ -440,6 +450,92 @@ input[type=radio]:checked + label {
 	-webkit-transform: scale(2.2) rotate(20deg) translateY(-2px);
 	-moz-transform: scale(2.2) rotate(20deg) translateY(-2px);
 	color: #424950;
+}
+
+.overlay {
+	position: fixed;
+	background: rgba(0, 0, 0, .6);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	transition: all .3s ease-in-out;
+	display: none;
+}
+
+.likes-box {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	width: 29rem;
+	border-radius: 1rem;
+	min-height: 3rem;
+}
+
+.likes-item {
+	display: flex;
+	align-items: center;
+}
+
+.likes-item_img {
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center;
+}
+
+.likes-item_name {
+	flex: 1;
+	font-size: 1.33rem;
+	text-transform: capitalize;
+	letter-spacing: 1px;
+	line-height: 2;
+}
+
+.likes-close_btn {
+	position: absolute;
+	background: none;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 2rem;
+	right: 0;
+	top: 0;
+	transform: translate(0, -10%);
+}
+
+.likes-close_btn:focus {
+	outline: none;
+}
+
+.likes-counter {
+	position: absolute;
+	top: 101%;
+	left: 5%;
+	font-size: 1.2rem;
+	cursor: pointer;
+	color: #417fff;
+}
+
+.add_container {
+	position: relative;
+}
+
+.add_container-del {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 2rem;
+	color: #343A40;
+	transform: translate(-25%, -5%);
+}
+
+.nav-menu-icon {
+	font-size: 1.5rem;
+	line-height: 1.8rem
 }
 
 .alert {

@@ -1,14 +1,10 @@
 <?php require APPROOT.'/views/inc/header.php'; ?>
-<?php flash('post_message'); ?>
 
-	<div class="row mb-3">
-		<div class="col-md-6">
-			<h1>Gallery</h1>
-		</div>
-		<div class="col-md-6">
-			<a href="<?php echo URLROOT; ?>/posts/add" class="btn btn-primary pull-right">
-				<i class="fa fa-pencil"></i> Add Pic
-			</a>
+	<?php flash('post_message'); ?>
+	<?php flash('email_changed'); ?>
+	<div class="row my-4">
+		<div class="col">
+			<h1 class="text-center">Gallery</h1>
 		</div>
 	</div>
 	<div class="gallery">

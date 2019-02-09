@@ -3,8 +3,6 @@
 class Posts extends Controller {
 
 	public function __construct() {
-		if (!isLoggedIn())
-			redirect('users/login');
 		$this->postModel = $this->model('Post');
 		$this->userModel = $this->model('User');
 	}
@@ -98,9 +96,11 @@ class Posts extends Controller {
 			$post = $this->postModel->getPostById($id);
 			$user = $this->userModel->getUserById($post->user_id);
 			$comments = $this->postModel->getPostComments($id);
+			$likes = $this->postModel->getPostLikes($id);
 			$data = [
 				'post' => $post,
 				'user' => $user,
+				'likes' => $likes,
 				'comments' => $comments,
 				'comment_err' => '',
 				'userLikes' => $this->postModel->userLikes($id, $_SESSION['user_id'])
@@ -128,7 +128,7 @@ class Posts extends Controller {
 					if ($_POST['like'] != 0) {
 						if ($this->postModel->unlikePost($id, $_SESSION['user_id'])) {
 							$data['userLikes'] = 0;
-							sendLikeNotification($data['user']->email, $data['url']);
+							$data['likes'] = $this->postModel->getPostLikes($id);
 							flash('post_message', 'Like removed', 'alert alert-danger');
 							$this->view('posts/show', $data);
 						} else
@@ -138,12 +138,17 @@ class Posts extends Controller {
 							'user_id' => $_SESSION['user_id'],
 							'post_id' => $id
 						];
-						if ($this->postModel->addLike($like)) {
-							$data['userLikes'] = 1;
-							flash('post_message', 'Like Added');
-							$this->view('posts/show', $data);
+						if ($data['userLikes'] == 0) {
+							if ($this->postModel->addLike($like)) {
+								$data['userLikes'] = 1;
+								$data['likes'] = $this->postModel->getPostLikes($id);
+								sendLikeNotification($data['user']->email, $data['url']);
+								flash('post_message', 'Like Added');
+								$this->view('posts/show', $data);
+							} else
+								die('Oups!! something went wrong..');
 						} else
-							die('Oups!! something went wrong..');
+							$this->view('posts/show', $data);
 					}
 				}
 			} else

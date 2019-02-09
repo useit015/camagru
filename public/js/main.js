@@ -1,14 +1,17 @@
-const profileImg = document.querySelector(".profile-img");
 const customUpload = document.querySelector(".custom-file-upload");
 const imgInput = document.querySelector(".imgInput");
 const video = document.querySelector('.player');
 const canvas = document.querySelector('.photo');
 const capture = document.querySelector('.capture');
-const type = document.querySelector('#type');
+const type = document.querySelector('.capture-mode');
 const uploadBtnType = document.querySelector('.form-group.upload-grp');
 const captureBtnType = document.querySelector('.form-group.capture-grp');
 const radios = document.querySelectorAll('.form-check-input');
 const canvasSup = document.querySelector('.canvas_sup');
+const overlay = document.querySelector('.overlay');
+const likesClose = document.querySelector('.likes-close_btn');
+const likesOpen = document.querySelector('.likes-counter');
+const likesBox = document.querySelector('.likes-box');
 let typeCapture = true;
 let captureFlag = true;
 let i;
@@ -47,9 +50,6 @@ function init() {
 	}
 }
 
-if (profileImg)
-	profileImg.addEventListener('click', e => document.querySelector('.profile-settings').classList.toggle('active'));
-
 if (customUpload)
 	customUpload.addEventListener('click', e => document.querySelector(".imgInput").click());
 if (imgInput) {
@@ -82,10 +82,11 @@ if (capture)
 	});
 
 if (type) {
-	type.addEventListener('change', e => {
+	type.addEventListener('click', e => {
 		if (typeCapture) {
 			uploadBtnType.style.display = 'block';
 			captureBtnType.style.display = 'none';
+			type.innerHTML = 'Switch to camera';
 		} else {
 			uploadBtnType.style.display = 'none';
 			captureBtnType.style.display = 'block';
@@ -93,6 +94,7 @@ if (type) {
 			capture.textContent = 'Capture';
 			imgInput.value = '';
 			customUpload.innerHTML = 'Upload Image';
+			type.innerHTML = 'Switch to retro';
 		}
 		typeCapture = !typeCapture;
 	});
@@ -114,6 +116,12 @@ if (canvas) {
 		canvasSup.style.left = `${e.offsetX}px`;
 		canvasSup.style.top = `${e.offsetY}px`;
 	});
+}
+
+if (likesOpen && likesClose && overlay) {
+	overlay.addEventListener('click', e => {if (e.target == overlay) overlay.style.display = 'none';});
+	likesOpen.addEventListener('click', e => overlay.style.display = 'block');
+	likesClose.addEventListener('click', e => overlay.style.display = 'none');
 }
 
 init();

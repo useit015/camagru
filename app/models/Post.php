@@ -68,6 +68,21 @@ class Post {
 		return $this->db->resultSet();
 	}
 
+	public function getPostLikes($id) {
+		$this->db->query('SELECT 
+						likes.id as likeId,
+						likes.created_at as likeCreated,
+						likes.user_id as userId,
+						users.name as userName,
+						users.img as userImg
+						FROM likes, users
+						WHERE likes.post_id = :id
+						AND users.id = likes.user_id
+						ORDER BY likes.created_at DESC');
+		$this->db->bind(':id', $id);
+		return $this->db->resultSet();
+	}
+
 	public function addLike($like) {
 		$this->db->query('INSERT INTO likes (user_id, post_id) VALUES (:user_id, :post_id)');
 		$this->db->bind(':user_id', $like['user_id']);

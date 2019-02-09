@@ -2,9 +2,7 @@
 
 	<div class="row">
 		<div class="col mx-auto">
-			<div class="card card-body bg-light mt-5">
-				<h2 class="card-title text-center">Settings</h2>
-				<hr class="py-3">
+			<div class="card card-body bg-light mt-5 pt-5">
 				<form action="<?php echo URLROOT; ?>/users/settings/<?php echo $data['id']; ?>" method="post"  enctype="multipart/form-data">
 					<div class="row">
 						<div class="col-md-4 d-flex align-items-center justify-content-center">

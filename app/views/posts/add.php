@@ -1,9 +1,9 @@
 <?php require APPROOT.'/views/inc/header.php'; ?>
 
-<a href="<?php echo URLROOT; ?>/posts" class="btn btn-light"><i class="fa fa-backward"></i> Back</a>
-<div class="card card-body bg-light mt-5">
+<div class="card card-body bg-light mt-5 add_container">
+	<a href="<?php echo URLROOT; ?>/posts" class="add_container-del"><i class="fa fa-times-circle"></i></a>
 	<form action="<?php echo URLROOT; ?>/posts/add" method="post" enctype="multipart/form-data">
-		<div class="row">
+		<div class="row p-3 mb-3">
 			<div class="col-md-6 canvas_container">
 				<img class="canvas_sup" draggable="true">
 				<canvas class="photo"></canvas>
@@ -67,13 +67,8 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="toggle slide">
-					<input id="type" name="type" type="checkbox" />
-					<label for="type">
-						<div class="card-toggle slide"></div>
-					</label>
-					</div>
-				</div>
+				<a href="#" class="btn btn-block btn-dark capture-mode">Switch to retro</a>
+			</div>
 			<div class="col-md-4">
 				<input type="submit" value="Take Pic" class="btn btn-block btn-success">
 			</div>

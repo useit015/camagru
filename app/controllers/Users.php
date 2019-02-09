@@ -109,16 +109,16 @@ class Users extends Controller {
 				$data['name_err'] = $this->validateName($data['name']);
 				$data['email_err'] = $data['email'] != $_SESSION['user_email'] ? $this->validateEmail($data['email']) : '';
 				if (empty($data['email_err']) && empty($data['name_err'])) {
+					if ($data['email'] != $_SESSION['user_email']) {
+						$data['vkey'] = md5(time().trim($_POST['email']));
+						if ($this->userModel->unVerifyUser($data) && sendVerificationMail($data))
+							flash('email_changed', 'Please verify your new email');
+						else
+							die('Oups .. something went wrong !');
+					}
 					if ($this->userModel->updateUser($id, $data)) {
-						// if (sendMail($data['email'], $data['name'], "<a href=".URLROOT."/users/verify/".$data['vkey'].">Verify email</a>")) {
-						// 	flash('register_success', 'Please verify your email');
-						// 	redirect('users/login');
-						// } else {
-						// 	die('Oups .. something went wrong !');
-						// }
 						$this->updateSession($data);
-						// flash('update_success', 'Your details have been updated ..');
-						// redirect('posts');
+						redirect('posts');
 					} else
 						die('Oups .. something went wrong !');
 				} else
@@ -198,8 +198,8 @@ class Users extends Controller {
 			redirect('pages');
 	}
 
-	public function verify($key) {
-		if ($this->userModel->verifyUser($key)) {
+	public function verify($key = -1) {
+		if ($key != -1 && $this->userModel->verifyUser($key)) {
 			flash('register_success', 'Your email has been verified .. you can now log in');
 			redirect('users/login');
 		} else
