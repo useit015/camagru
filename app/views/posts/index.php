@@ -2,6 +2,7 @@
 
 	<?php flash('post_message'); ?>
 	<?php flash('email_changed'); ?>
+	<?php flash('password_changed'); ?>
 	<div class="row my-4">
 		<div class="col">
 			<h1 class="text-center">Gallery</h1>

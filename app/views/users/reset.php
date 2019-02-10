@@ -3,6 +3,7 @@
 	<div class="row">
 		<div class="col-md-6 mx-auto">
 			<?php flash('register_success'); ?>
+			<?php flash('reset_success'); ?>
 			<div class="card card-body bg-light mt-5">
 				<h2>Reset Password</h2>
 				<form action="<?php echo URLROOT; ?>/users/reset_password/<?php echo $data['sel'].'_'.$data['val'];?>" method="post">

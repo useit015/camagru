@@ -38,6 +38,14 @@ class User {
 		return $this->db->execute();
 	}
 
+	public function updatePassword($id, $password) {
+		$this->db->query('UPDATE users SET password = :password WHERE id = :id');
+		$this->db->bind(':password', $password);
+		$this->db->bind(':id', $id);
+		return $this->db->execute();
+
+	}
+
 	public function findUserByEmail($email) {
 		$this->db->query('SELECT * FROM users WHERE email = :email');
 		$this->db->bind(':email', $email);

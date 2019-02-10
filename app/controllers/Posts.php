@@ -25,10 +25,10 @@ class Posts extends Controller {
 				'y' => $_POST['y'],
 				'image_err' => ''
 			];
-			if ($_POST['type'])
-				$data['image'] = $this->postModel->uploadImage($_FILES['image']);
-			else
+			if ($_POST['type'] == 'camera')
 				$data['image'] = $this->postModel->saveImage64($_POST['imageData']);
+			else
+				$data['image'] = $this->postModel->uploadImage($_FILES['image']);
 			watermark(dirname(dirname(APPROOT)).'/'.$data['image'], $data['super'], $data['x'], $data['y']);
 			if (empty($data['image']))
 				$data['image_err'] = 'Please upload an image';

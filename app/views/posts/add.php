@@ -55,25 +55,27 @@
 				<div class="form-group upload-grp">
 					<span class="invalid-feedback"><?php echo $data['image_err']; ?></span>
 					<input name="image" type="file" class="imgInput" value="<?php echo $_SESSION['user_img']; ?>"/>
-					<div class="custom-file-upload btn btn-block btn-primary">Upload Image</div>
+					<div class="custom-file-upload btn btn-block btn-lg btn-primary">Upload Image</div>
 				</div>
 				<div class="form-group capture-grp">
 					<input name="imageData" type="text" class="imgInputData" value=""/>
-					<div class="capture btn btn-block btn-primary">Capture</div>
+					<div class="capture btn btn-block btn-lg btn-primary">Capture</div>
 				</div>
 				<div class="form-group">
 					<input type="hidden" name="x" id="x">
 					<input type="hidden" name="y" id="y">
+					<input type="hidden" name="type" value="camera" id="type">
 				</div>
 			</div>
 			<div class="col-md-4">
-				<a href="#" class="btn btn-block btn-dark capture-mode">Switch to retro</a>
+				<a href="#" class="btn btn-block btn-lg btn-dark capture-mode">Switch to retro</a>
 			</div>
 			<div class="col-md-4">
-				<input type="submit" value="Take Pic" class="btn btn-block btn-success">
+				<input type="submit" value="Take Pic" class="btn btn-block btn-lg btn-success capture-btn" disabled>
 			</div>
 		</div>
 	</form>
+	<audio class="snap" src="<?php echo URLROOT; ?>/public/img/snap.mp3" hidden></audio>
 </div>
 
 <?php require APPROOT.'/views/inc/footer.php'; ?>

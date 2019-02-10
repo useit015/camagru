@@ -32,7 +32,7 @@ class Users extends Controller {
 				if (empty($data['email_err']) && empty($data['name_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
 					$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 					if (sendVerificationMail($data) && $this->userModel->register($data)) {
-						flash('register_success', 'Please verify your email');
+						flash('reset_success', 'Please check your email');
 						redirect('users/login');
 					} else
 						die('Oups .. something went wrong !');
@@ -95,40 +95,70 @@ class Users extends Controller {
 		if ($id == $_SESSION['user_id']) {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-				$data = [
-					'id' => $id,
-					'name' => trim($_POST['name']),
-					'email' => trim($_POST['email']),
-					'number' => trim($_POST['number']),
-					'image' => $_FILES['image']['tmp_name'] ? $this->userModel->uploadImage($_FILES['image'], $_SESSION['user_name']) : $_SESSION['user_img'],
-					'name_err' => '',
-					'email_err' => '',
-					'image_err' => '',
-					'number_err' => ''
-				];
-				$data['name_err'] = $this->validateName($data['name']);
-				$data['email_err'] = $data['email'] != $_SESSION['user_email'] ? $this->validateEmail($data['email']) : '';
-				if (empty($data['email_err']) && empty($data['name_err'])) {
-					if ($data['email'] != $_SESSION['user_email']) {
-						$data['vkey'] = md5(time().trim($_POST['email']));
-						if ($this->userModel->unVerifyUser($data) && sendVerificationMail($data))
-							flash('email_changed', 'Please verify your new email');
-						else
+				if ($_POST['password_change'] == 'change') {
+					$data = [
+						'id' => $id,
+						'name' => $_SESSION['user_name'],
+						'email' => $_SESSION['user_email'],
+						'number' => $_SESSION['user_nbr'],
+						'old_password' => $_POST['old_password'],
+						'new_password' => $_POST['new_password'],
+						'confirm_new_password' => $_POST['confirm_new_password'],
+						'old_password_err' => '',
+						'new_password_err' => '',
+						'confirm_new_password_err' => '',
+						'password_update' => true
+					];
+					$data['old_password_err'] = $this->validateExistingPassword($_POST['old_password']);
+					$data['new_password_err'] = $this->validatePassword($data['new_password']);
+					$data['confirm_new_password_err'] = $this->validateConfirmPassword($data['new_password'], $data['confirm_new_password']);
+					if (empty($data['old_password_err']) && empty($data['new_password_err']) && empty($data['confirm_new_password_err'])) {
+						$password = password_hash($data['new_password'], PASSWORD_DEFAULT);
+						if ($this->userModel->updatePassword($id, $password)) {
+							flash('password_changed', 'Your password has been updated successfuly');
+							redirect('posts');
+						} else
 							die('Oups .. something went wrong !');
-					}
-					if ($this->userModel->updateUser($id, $data)) {
-						$this->updateSession($data);
-						redirect('posts');
 					} else
-						die('Oups .. something went wrong !');
-				} else
-					$this->view('users/settings', $data);
+						$this->view('users/settings', $data);
+				} else {
+					$data = [
+						'id' => $id,
+						'name' => trim($_POST['name']),
+						'email' => trim($_POST['email']),
+						'number' => trim($_POST['number']),
+						'image' => $_FILES['image']['tmp_name'] ? $this->userModel->uploadImage($_FILES['image'], $_SESSION['user_name']) : $_SESSION['user_img'],
+						'name_err' => '',
+						'email_err' => '',
+						'image_err' => '',
+						'number_err' => '',
+						'password_update' => false
+					];
+					$data['name_err'] = $this->validateName($data['name']);
+					$data['email_err'] = $data['email'] != $_SESSION['user_email'] ? $this->validateEmail($data['email']) : '';
+					if (empty($data['email_err']) && empty($data['name_err'])) {
+						if ($data['email'] != $_SESSION['user_email']) {
+							$data['vkey'] = md5(time().trim($_POST['email']));
+							if ($this->userModel->unVerifyUser($data) && sendVerificationMail($data))
+								flash('email_changed', 'Please verify your new email');
+							else
+								die('Oups .. something went wrong !');
+						}
+						if ($this->userModel->updateUser($id, $data)) {
+							$this->updateSession($data);
+							redirect('posts');
+						} else
+							die('Oups .. something went wrong !');
+					} else
+						$this->view('users/settings', $data);
+				}
 			} else {
 				$data = [
-					'id' => $_SESSION['user_id'],
+					'id' => $id,
 					'name' => $_SESSION['user_name'],
 					'email' => $_SESSION['user_email'],
-					'number' => $_SESSION['user_nbr']
+					'number' => $_SESSION['user_nbr'],
+					'password_update' => false
 				];
 				$this->view('users/settings', $data);
 			}
@@ -270,6 +300,16 @@ class Users extends Controller {
 			return 'Please confirm your password';
 		} elseif ($password != $confPassword) {
 			return 'Passwords do not match';
+		} else {
+			return '';
+		}
+	}
+
+	public function validateExistingPassword($password) {
+		if (empty($password)) {
+			return 'Password shall not be empty';
+		} elseif (!$this->userModel->login($_SESSION['user_email'], $password)) {
+			return 'Wrong password';
 		} else {
 			return '';
 		}
