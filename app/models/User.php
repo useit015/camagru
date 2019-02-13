@@ -29,10 +29,11 @@ class User {
 	}
 
 	public function updateUser($id, $data) {
-		$this->db->query('UPDATE users SET name = :name, email = :email, number = :number, img = :img WHERE id = :id');
+		$this->db->query('UPDATE users SET name = :name, email = :email, number = :number, notif = :notif, img = :img WHERE id = :id');
 		$this->db->bind(':name', $data['name']);
 		$this->db->bind(':email', $data['email']);
 		$this->db->bind(':number', $data['number']);
+		$this->db->bind(':notif', $data['notif']);
 		$this->db->bind(':img', $data['image']);
 		$this->db->bind(':id', $id);
 		return $this->db->execute();
@@ -43,7 +44,6 @@ class User {
 		$this->db->bind(':password', $password);
 		$this->db->bind(':id', $id);
 		return $this->db->execute();
-
 	}
 
 	public function findUserByEmail($email) {

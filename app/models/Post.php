@@ -13,6 +13,7 @@ class Post {
 						posts.id as postId,
 						users.id as userId,
 						users.name as userName,
+						users.img as userImg,
 						posts.img as postImg,
 						posts.cmntCount as postCmntCount,
 						posts.likeCount as postLikeCount,
@@ -22,6 +23,27 @@ class Post {
 						INNER JOIN users
 						ON posts.user_id = users.id
 						ORDER BY posts.created_at DESC');
+		return $this->db->resultSet();
+	}
+
+	public function getPostsN($page, $num) {
+		$this->db->query('SELECT
+						posts.id as postId,
+						users.id as userId,
+						users.name as userName,
+						users.img as userImg,
+						posts.img as postImg,
+						posts.cmntCount as postCmntCount,
+						posts.likeCount as postLikeCount,
+						posts.created_at as postCreated,
+						users.created_at as userCreated
+						FROM posts
+						INNER JOIN users
+						ON posts.user_id = users.id
+						ORDER BY posts.created_at DESC
+						LIMIT :num OFFSET :start');
+		$this->db->bind(':num', $num, PDO::PARAM_INT);
+		$this->db->bind(':start', $page * $num, PDO::PARAM_INT);
 		return $this->db->resultSet();
 	}
 

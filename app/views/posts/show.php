@@ -8,9 +8,6 @@
 			<div class="main_img-details">
 				<div class="up">
 					<?php if ($data['post']->user_id == $_SESSION['user_id']) : ?>
-						<a href="<?php echo URLROOT; ?>/posts/edit/<?php echo $data['post']->id; ?>" class="main_img-details_edit">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
-						</a>
 						<form action="<?php echo URLROOT; ?>/posts/delete/<?php echo $data['post']->id; ?>" method="post">
 							<button type="submit" class="main_img-details_del">
 								<i class="fa fa-trash" aria-hidden="true"></i>

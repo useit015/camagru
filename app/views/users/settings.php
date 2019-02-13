@@ -24,6 +24,10 @@
 								<input type="text" name="number" class="form-control form-control-lg <?php echo (!empty($data['number_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['number']; ?>">
 								<span class="invalid-feedback"><?php echo $data['number_err']; ?></span>
 							</div>
+							<div class="form-check notif">
+								<input type="checkbox" class="form-check-input notif" name="notif" id="notif" <?php echo $data['notif'] ? 'checked' : ''; ?> value="<?php echo $data['notif'] ? 'check' : 'uncheck'; ?>">
+								<label class="form-check-label" for="notif">Receive Notifications</label>
+							</div>
 						</div>
 					</div>
 					<div class="row mt-5">

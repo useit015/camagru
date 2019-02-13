@@ -8,29 +8,30 @@
 			<h1 class="text-center">Gallery</h1>
 		</div>
 	</div>
-	<div class="gallery">
+	<div class="gallery mb-5">
 		<?php foreach($data['posts'] as $post) : ?>
 			<div class="gallery-item">
 				<a href="<?php echo URLROOT; ?>/posts/show/<?php echo $post->postId; ?>">
 					<img class="gallery-image" src="<?php echo URL.'/'.$post->postImg; ?>">
-					<div class="gallery-item-overlay"></div>
-					<div class="gallery-item-details fadeIn-bottom fadeIn-left">
-						<h3>By: <?php echo $post->userName; ?></h3>
-						<p><?php echo time_elapsed_string($post->postCreated); ?></p>
-						<div class="gallery-item-details_interaction">
-							<div class="gallery-item-details_like">
-								<i class="fa fa-thumbs-up pb-3 px-3 pt-1 gallery-item-details_like-icon"></i>
-								<span><?php echo $post->postLikeCount; ?></span>
-							</div>
-							<div class="gallery-item-details_cmnt">
-								<i class="fa fa-comment pb-3 px-3 gallery-item-details_cmnt-icon"></i>
-								<span><?php echo $post->postCmntCount; ?></span>
-							</div>
+					<div class="gallery-item-details">
+						<div class="gallery-img_container d-flex justify-content-center align-items-start">
+							<div class="cmnt-img" style="background-image:url(<?php echo URL.'/'.$post->userImg; ?>)"></div>
 						</div>
+						<h5><?php echo $post->userName; ?><span><?php  echo time_elapsed_string($post->postCreated); ?></span></h5>
+					</div>
+					<h5></h5>
+					<div class="gallery-item-details_like">
+						<i class="fa fa-thumbs-up gallery-item-details_like-icon px-2"></i>
+						<span><?php echo $post->postLikeCount; ?></span>
+					</div>
+					<div class="gallery-item-details_cmnt">
+						<i class="fa fa-comment gallery-item-details_cmnt-icon px-2"></i>
+						<span><?php echo $post->postCmntCount; ?></span>
 					</div>
 				</a>
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<script src="<?php echo URLROOT; ?>/js/infinite.js"></script>
 
 <?php require APPROOT.'/views/inc/footer.php'; ?>

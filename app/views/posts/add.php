@@ -11,19 +11,19 @@
 			</div>
 			<div class="col-md-3 d-flex flex-column justify-content-around">
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/1.png" class="form-check-input" name="super" id="super1">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/1.png" class="form-check-input hidden sup" name="super" id="super1">
 					<label for="super1" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/1.png" alt="" class="sup">
 					</label>
 				</div>
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/2.png" class="form-check-input" name="super" id="super2">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/2.png" class="form-check-input hidden sup" name="super" id="super2">
 					<label for="super2" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/2.png" alt="" class="sup">
 					</label>
 				</div>
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/3.png" class="form-check-input" name="super" id="super3">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/3.png" class="form-check-input hidden sup" name="super" id="super3">
 					<label for="super3" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/3.png" alt="" class="sup">
 					</label>
@@ -31,19 +31,19 @@
 			</div>
 			<div class="col-md-3 d-flex flex-column justify-content-around">
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/4.png" class="form-check-input" name="super" id="super4">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/4.png" class="form-check-input hidden sup" name="super" id="super4">
 					<label for="super4" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/4.png" alt="" class="sup">
 					</label>
 				</div>
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/5.png" class="form-check-input" name="super" id="super5">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/5.png" class="form-check-input hidden sup" name="super" id="super5">
 					<label for="super5" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/5.png" alt="" class="sup">
 					</label>
 				</div>
 				<div class="form-check d-flex align-items-center justify-content-center">
-					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/6.png" class="form-check-input" name="super" id="super6">
+					<input type="radio" value="<?php echo URLROOT; ?>/public/img/sup/6.png" class="form-check-input hidden sup" name="super" id="super6">
 					<label for="super6" class="form-check-label">
 						<img src="<?php echo URLROOT; ?>/public/img/sup/6.png" alt="" class="sup">
 					</label>

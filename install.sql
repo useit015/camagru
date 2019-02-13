@@ -5,6 +5,7 @@ CREATE TABLE `camagru`.`users` (
 	`password` VARCHAR(255) NOT NULL,
 	`img` VARCHAR(255) NOT NULL,
 	`number` VARCHAR(255),
+	`notif` BOOLEAN NOT NULL DEFAULT TRUE,
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`verified` tinyint(1) NOT NULL DEFAULT 0,
 	`vkey` VARCHAR(255) NOT NULL,

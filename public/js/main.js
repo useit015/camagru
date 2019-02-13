@@ -9,17 +9,19 @@ const typeInput = document.querySelector('#type');
 const uploadBtnType = document.querySelector('.form-group.upload-grp');
 const captureBtnType = document.querySelector('.form-group.capture-grp');
 const captureBtn = document.querySelector('.capture-btn');
-const radios = document.querySelectorAll('.form-check-input');
+const radios = document.querySelectorAll('.form-check-input.sup');
 const canvasSup = document.querySelector('.canvas_sup');
 const overlay = document.querySelector('.overlay');
 const likesClose = document.querySelector('.likes-close_btn');
 const likesOpen = document.querySelector('.likes-counter');
 const likesBox = document.querySelector('.likes-box');
 const changePassword = document.querySelector('.settings-change_password');
+const notifCheckbox = document.querySelector('#notif');
+const notifLabel = document.querySelector('.form-check-label.notif');
 let typeCapture = true;
 let captureFlag = true;
 let pictureIsAllowed = false;
-let intervalId;
+let intervalId = 0;
 
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 	return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
@@ -68,7 +70,7 @@ function init() {
 }
 
 if (customUpload)
-	customUpload.addEventListener('click', e => document.querySelector(".imgInput").click());
+	customUpload.addEventListener('click', () => document.querySelector(".imgInput").click());
 
 if (imgInput) {
 	imgInput.addEventListener('change', e => {
@@ -92,7 +94,7 @@ if (imgInput) {
 }
 
 if (capture)
-	capture.addEventListener('click', e => {
+	capture.addEventListener('click', () => {
 		if (captureFlag) {
 			snap.currentTime = 0;
 			snap.play();
@@ -112,7 +114,7 @@ if (capture)
 	});
 
 if (type) {
-	type.addEventListener('click', e => {
+	type.addEventListener('click', () => {
 		if (typeCapture) {
 			uploadBtnType.style.display = 'block';
 			captureBtnType.style.display = 'none';
@@ -140,9 +142,11 @@ if (type) {
 
 if (radios) {
 	radios.forEach(cur => {
-		cur.addEventListener('change', e => {
+		cur.addEventListener('change', () => {
 			canvasSup.src = document.querySelector('input[name=super]:checked').value;
 			canvasSup.style.display = 'auto';
+			document.querySelector('#x').value = 400;
+			document.querySelector('#y').value = 300;
 			captureBtn.disabled = allowPic(pictureIsAllowed);
 		});
 	});
@@ -150,6 +154,7 @@ if (radios) {
 
 if (canvas) {
 	canvas.addEventListener('click', e => {
+		console.log(e.target);
 		document.querySelector('#x').value = e.offsetX.map(0, e.target.offsetWidth, 0, 800);
 		document.querySelector('#y').value = e.offsetY.map(0, e.target.offsetHeight, 0, 600);
 		canvasSup.style.left = `${e.offsetX}px`;
@@ -161,12 +166,15 @@ if (overlay)
 	overlay.addEventListener('click', e => {if (e.target == overlay) overlay.style.display = 'none';});
 
 if (likesClose)
-	likesClose.addEventListener('click', e => overlay.style.display = 'none');
+	likesClose.addEventListener('click', () => overlay.style.display = 'none');
 
 if (likesOpen)
-	likesOpen.addEventListener('click', e => overlay.style.display = 'block');
+	likesOpen.addEventListener('click', () => overlay.style.display = 'block');
 
 if (changePassword)
-	changePassword.addEventListener('click', e => overlay.style.display = 'block');
+	changePassword.addEventListener('click', () => overlay.style.display = 'block');
+
+if (notifCheckbox)
+	notifCheckbox.addEventListener('change', () => notifCheckbox.value = notifCheckbox.value == 'check' ? 'uncheck' : 'check');
 
 init();

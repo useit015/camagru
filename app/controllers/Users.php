@@ -101,6 +101,7 @@ class Users extends Controller {
 						'name' => $_SESSION['user_name'],
 						'email' => $_SESSION['user_email'],
 						'number' => $_SESSION['user_nbr'],
+						'notif' => $_SESSION['user_notif'],
 						'old_password' => $_POST['old_password'],
 						'new_password' => $_POST['new_password'],
 						'confirm_new_password' => $_POST['confirm_new_password'],
@@ -127,6 +128,7 @@ class Users extends Controller {
 						'name' => trim($_POST['name']),
 						'email' => trim($_POST['email']),
 						'number' => trim($_POST['number']),
+						'notif' => $_POST['notif'] == 'check' ? 1 : 0,
 						'image' => $_FILES['image']['tmp_name'] ? $this->userModel->uploadImage($_FILES['image'], $_SESSION['user_name']) : $_SESSION['user_img'],
 						'name_err' => '',
 						'email_err' => '',
@@ -158,6 +160,7 @@ class Users extends Controller {
 					'name' => $_SESSION['user_name'],
 					'email' => $_SESSION['user_email'],
 					'number' => $_SESSION['user_nbr'],
+					'notif' => $_SESSION['user_notif'],
 					'password_update' => false
 				];
 				$this->view('users/settings', $data);
@@ -241,6 +244,7 @@ class Users extends Controller {
 		unset($_SESSION['user_email']);
 		unset($_SESSION['user_name']);
 		unset($_SESSION['user_nbr']);
+		unset($_SESSION['user_notif']);
 		unset($_SESSION['user_img']);
 		session_destroy();
 		redirect('users/login');
@@ -251,6 +255,7 @@ class Users extends Controller {
 		$_SESSION['user_email'] = $user->email;
 		$_SESSION['user_name'] = $user->name;
 		$_SESSION['user_img'] = $user->img;
+		$_SESSION['user_notif'] = $user->notif;
 		$_SESSION['user_nbr'] = $user->number;
 		redirect('posts');
 	}
@@ -259,6 +264,7 @@ class Users extends Controller {
 		$_SESSION['user_email'] = $data['email'];
 		$_SESSION['user_name'] = $data['name'];
 		$_SESSION['user_img'] = $data['image'];
+		$_SESSION['user_notif'] = $data['notif'];
 		$_SESSION['user_nbr'] = $data['number'];
 		redirect('posts');
 	}

@@ -1,14 +1,23 @@
 <?php
 
 class Posts extends Controller {
+	private $perPage = 6;
 
 	public function __construct() {
 		$this->postModel = $this->model('Post');
 		$this->userModel = $this->model('User');
 	}
 
+	public function pages($page) {
+		header('Content-type: text/json');
+		$posts = $this->postModel->getPostsN($page, $this->perPage);
+		foreach ($posts as $post)
+			$post->postCreated = time_elapsed_string($post->postCreated);
+		echo json_encode($posts);
+	}
+
 	public function index() {
-		$posts = $this->postModel->getPosts();
+		$posts = $this->postModel->getPostsN(0, $this->perPage);
 		$data = [
 			'posts' => $posts
 		];
@@ -49,47 +58,47 @@ class Posts extends Controller {
 		}
 	}
 
-	public function edit($id = -1) {
-		if ($id == -1)
-			redirect('posts');
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-			$data = [
-				'id' => $id,
-				'title' => trim($_POST['title']),
-				'body' => trim($_POST['body']),
-				'user_id' => $_SESSION['user_id'],
-				'title_err' => '',
-				'body_err' => ''
-			];
-			if (empty($data['title'])) {
-				$data['title_err'] = 'Please enter title';
-			}
-			if (empty($data['body'])) {
-				$data['body_err'] = 'Please enter body text';
-			}
-			if (empty($data['title_err']) && empty($data['body_err'])) {
-				if ($this->postModel->updatePost($data)) {
-					flash('post_message', 'Post Updated');
-					redirect('posts');
-				} else {
-					die('Ouups .. something went wrong !');
-				}
-			} else {
-				$this->view('posts/edit', $data);
-			}
-		} else {
-			$post = $this->postModel->getPostById($id);
-			if ($post->user_id != $_SESSION['user_id'])
-				redirect('posts');
-			$data = [
-				'id' => $id,
-				'title' => $post->title,
-				'body' => $post->body
-			];
-			$this->view('posts/edit', $data);
-		}
-	}
+	// public function edit($id = -1) {
+	// 	if ($id == -1)
+	// 		redirect('posts');
+	// 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	// 		$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+	// 		$data = [
+	// 			'id' => $id,
+	// 			'title' => trim($_POST['title']),
+	// 			'body' => trim($_POST['body']),
+	// 			'user_id' => $_SESSION['user_id'],
+	// 			'title_err' => '',
+	// 			'body_err' => ''
+	// 		];
+	// 		if (empty($data['title'])) {
+	// 			$data['title_err'] = 'Please enter title';
+	// 		}
+	// 		if (empty($data['body'])) {
+	// 			$data['body_err'] = 'Please enter body text';
+	// 		}
+	// 		if (empty($data['title_err']) && empty($data['body_err'])) {
+	// 			if ($this->postModel->updatePost($data)) {
+	// 				flash('post_message', 'Post Updated');
+	// 				redirect('posts');
+	// 			} else {
+	// 				die('Ouups .. something went wrong !');
+	// 			}
+	// 		} else {
+	// 			$this->view('posts/edit', $data);
+	// 		}
+	// 	} else {
+	// 		$post = $this->postModel->getPostById($id);
+	// 		if ($post->user_id != $_SESSION['user_id'])
+	// 			redirect('posts');
+	// 		$data = [
+	// 			'id' => $id,
+	// 			'title' => $post->title,
+	// 			'body' => $post->body
+	// 		];
+	// 		$this->view('posts/edit', $data);
+	// 	}
+	// }
 
 	public function show($id = -1) {
 		if ($id !== -1) {
@@ -119,7 +128,8 @@ class Posts extends Controller {
 						$this->view('posts/show', $data);
 					} elseif ($this->postModel->addComment($comment)) {
 						$data['comments'] = $this->postModel->getPostComments($id);
-						sendCommentNotification($data['user']->email, $data['url']);
+						if ($data['user']->notif)
+							sendCommentNotification($data['user']->email, $data['url']);
 						flash('post_message', 'Comment Added');
 						$this->view('posts/show', $data);
 					} else
@@ -142,7 +152,8 @@ class Posts extends Controller {
 							if ($this->postModel->addLike($like)) {
 								$data['userLikes'] = 1;
 								$data['likes'] = $this->postModel->getPostLikes($id);
-								sendLikeNotification($data['user']->email, $data['url']);
+								if ($data['user']->notif)
+									sendLikeNotification($data['user']->email, $data['url']);
 								flash('post_message', 'Like Added');
 								$this->view('posts/show', $data);
 							} else
