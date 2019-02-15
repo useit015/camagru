@@ -6,9 +6,11 @@ const canvas = document.querySelector('.photo');
 const capture = document.querySelector('.capture');
 const type = document.querySelector('.capture-mode');
 const typeInput = document.querySelector('#type');
+const uploadIcon = document.querySelector('.upload-icon');
 const uploadBtnType = document.querySelector('.form-group.upload-grp');
 const captureBtnType = document.querySelector('.form-group.capture-grp');
 const captureBtn = document.querySelector('.capture-btn');
+const resetFilter = document.querySelector('.reset-filters');
 const radios = document.querySelectorAll('.form-check-input.sup');
 const canvasSup = document.querySelector('.canvas_sup');
 const overlay = document.querySelector('.overlay');
@@ -16,7 +18,7 @@ const likesClose = document.querySelector('.likes-close_btn');
 const likesOpen = document.querySelector('.likes-counter');
 const likesBox = document.querySelector('.likes-box');
 const changePassword = document.querySelector('.settings-change_password');
-const notifCheckbox = document.querySelector('#notif');
+const notifCheck = document.querySelector('#notif');
 const notifLabel = document.querySelector('.form-check-label.notif');
 let typeCapture = true;
 let captureFlag = true;
@@ -46,8 +48,16 @@ function drawInCanvas() {
 	intervalId = setInterval(() => {
 		ctx.drawImage(video, 0, 0, width, height);
 		let pixels = ctx.getImageData(0, 0, width, height);
-		ctx.putImageData(pixels, 0, 0);
+		ctx.putImageData(jsEffect(pixels), 0, 0);
 	}, 16);
+}
+
+function jsEffect(pixels) {
+	if (document.querySelector('#splitCheck').checked)
+		pixels = splitEffect(pixels);
+	if (document.querySelector('#invertCheck').checked)
+		pixels = invertEffect(pixels);
+	return brightnessEffect(colorEffect(pixels));
 }
 
 function allowPic(flag) {
@@ -62,11 +72,49 @@ function stopRender() {
 	intervalId = 0;
 }
 
-function init() {
-	if (video && canvas) {
-		getVideo(video);
-		video.addEventListener('canplay', drawInCanvas);
+function invertEffect(pixels) {
+	for (let i = 0; i < pixels.data.length; i += 4) {
+		pixels.data[i] ^= 250;
+		pixels.data[i + 1] ^= 250;
+		pixels.data[i + 2] ^= 250;
 	}
+	return pixels;
+}
+
+function colorEffect(pixels) {
+	const red = document.querySelector('#redSlider').value * 255 / 100;
+	const green = document.querySelector('#greenSlider').value * 255 / 100;
+	const blue = document.querySelector('#blueSlider').value * 255 / 100;
+	for (let i = 0; i < pixels.data.length; i += 4) {
+		pixels.data[i] += red;
+		pixels.data[i + 1] += green;
+		pixels.data[i + 2] += blue;
+	}
+	return pixels;
+}
+
+function splitEffect(pixels) {
+	for (let i = 0; i < pixels.data.length; i += 4) {
+		pixels.data[i - 140] = pixels.data[i];
+		pixels.data[i + 110] = pixels.data[i + 1];
+		pixels.data[i - 170] = pixels.data[i + 2];
+	}
+	return pixels;
+}
+
+function brightnessEffect(pixels) {
+	let brightness = document.querySelector('#briSlider').value * 255 / 100;
+	for (var i = 0; i < pixels.data.length; i += 4) {
+		pixels.data[i] += brightness;
+		pixels.data[i + 1] += brightness;
+		pixels.data[i + 2] += brightness;
+	}
+	return pixels;
+}
+
+if (video && canvas) {
+	getVideo(video);
+	video.addEventListener('canplay', drawInCanvas);
 }
 
 if (customUpload)
@@ -87,6 +135,7 @@ if (imgInput) {
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 				pictureIsAllowed = true;
 				captureBtn.disabled = allowPic(pictureIsAllowed);
+				uploadIcon.style.display = 'none';
 			});
 			img.src = URL.createObjectURL(e.target.files[0]);
 		}
@@ -118,14 +167,24 @@ if (type) {
 		if (typeCapture) {
 			uploadBtnType.style.display = 'block';
 			captureBtnType.style.display = 'none';
+			uploadIcon.style.display = 'block';
 			type.innerHTML = 'Switch to camera';
 			stopRender();
 			captureFlag = true;
 			canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 			typeInput.value = 'retro';
+			document.querySelectorAll('.form-control-range').forEach(cur => {
+				cur.value = 0;
+				cur.disabled = 1;
+			});
+			document.querySelectorAll('.form-check-input').forEach(cur => {
+				cur.checked = 0;
+				cur.disabled = 1;
+			});
 		} else {
 			uploadBtnType.style.display = 'none';
 			captureBtnType.style.display = 'block';
+			uploadIcon.style.display = 'none';
 			stopRender();
 			drawInCanvas();
 			capture.textContent = 'Capture';
@@ -133,6 +192,8 @@ if (type) {
 			customUpload.innerHTML = 'Upload Image';
 			type.innerHTML = 'Switch to retro';
 			typeInput.value = 'camera';
+			document.querySelectorAll('.form-control-range').forEach(cur => cur.disabled = 0);
+			document.querySelectorAll('.form-check-input').forEach(cur => cur.disabled = 0);
 		}
 		typeCapture = !typeCapture;
 		pictureIsAllowed = false;
@@ -154,11 +215,17 @@ if (radios) {
 
 if (canvas) {
 	canvas.addEventListener('click', e => {
-		console.log(e.target);
 		document.querySelector('#x').value = e.offsetX.map(0, e.target.offsetWidth, 0, 800);
 		document.querySelector('#y').value = e.offsetY.map(0, e.target.offsetHeight, 0, 600);
 		canvasSup.style.left = `${e.offsetX}px`;
 		canvasSup.style.top = `${e.offsetY}px`;
+	});
+}
+
+if (resetFilter) {
+	resetFilter.addEventListener('click', () => {
+		document.querySelectorAll('.form-control-range').forEach(cur => cur.value = 0);
+		document.querySelectorAll('.form-check-input').forEach(cur => cur.checked = 0);
 	});
 }
 
@@ -174,7 +241,5 @@ if (likesOpen)
 if (changePassword)
 	changePassword.addEventListener('click', () => overlay.style.display = 'block');
 
-if (notifCheckbox)
-	notifCheckbox.addEventListener('change', () => notifCheckbox.value = notifCheckbox.value == 'check' ? 'uncheck' : 'check');
-
-init();
+if (notifCheck)
+	notifCheck.addEventListener('change', () => notifCheck.value = notifCheck.value == 'check' ? 'uncheck' : 'check');

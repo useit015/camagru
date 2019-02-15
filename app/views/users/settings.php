@@ -39,6 +39,7 @@
 							</div>
 						</div>
 						<div class="col-md-4">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<input type="submit" value="Update" class="btn btn-success btn-block btn-lg">
 						</div>
 						<div class="col-md-4">
@@ -72,6 +73,7 @@
 					<span class="invalid-feedback"><?php echo $data['confirm_new_password_err']; ?></span>
 				</div>
 				<div class="input-group mt-4 mb-3">
+					<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 					<input type="submit" value="Update" class="btn btn-success btn-block btn-lg mt-3">
 				</div>
 			</form>

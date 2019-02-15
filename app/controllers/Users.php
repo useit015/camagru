@@ -94,8 +94,10 @@ class Users extends Controller {
 	public function settings($id) {
 		if ($id == $_SESSION['user_id']) {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				if (!isset($_POST['token']) || $_POST['token'] != $_SESSION['token'])
+					redirect('pages');
 				$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-				if ($_POST['password_change'] == 'change') {
+				if (isset($_POST['password_change']) && $_POST['password_change'] == 'change') {
 					$data = [
 						'id' => $id,
 						'name' => $_SESSION['user_name'],
@@ -129,13 +131,14 @@ class Users extends Controller {
 						'email' => trim($_POST['email']),
 						'number' => trim($_POST['number']),
 						'notif' => $_POST['notif'] == 'check' ? 1 : 0,
-						'image' => $_FILES['image']['tmp_name'] ? $this->userModel->uploadImage($_FILES['image'], $_SESSION['user_name']) : $_SESSION['user_img'],
+						'image' => '',
 						'name_err' => '',
 						'email_err' => '',
 						'image_err' => '',
 						'number_err' => '',
 						'password_update' => false
 					];
+					$data['image'] = $_FILES['image']['tmp_name'] ? $this->userModel->uploadImage($_FILES['image'], $_SESSION['user_name']) : $_SESSION['user_img'];
 					$data['name_err'] = $this->validateName($data['name']);
 					$data['email_err'] = $data['email'] != $_SESSION['user_email'] ? $this->validateEmail($data['email']) : '';
 					if (empty($data['email_err']) && empty($data['name_err'])) {
@@ -240,13 +243,16 @@ class Users extends Controller {
 	}
 
 	public function logout() {
-		unset($_SESSION['user_id']);
-		unset($_SESSION['user_email']);
-		unset($_SESSION['user_name']);
-		unset($_SESSION['user_nbr']);
-		unset($_SESSION['user_notif']);
-		unset($_SESSION['user_img']);
-		session_destroy();
+		if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
+			unset($_SESSION['user_id']);
+			unset($_SESSION['user_email']);
+			unset($_SESSION['user_name']);
+			unset($_SESSION['user_nbr']);
+			unset($_SESSION['user_notif']);
+			unset($_SESSION['user_img']);
+			unset($_SESSION['token']);
+			session_destroy();
+		}
 		redirect('users/login');
 	}
 
@@ -257,6 +263,7 @@ class Users extends Controller {
 		$_SESSION['user_img'] = $user->img;
 		$_SESSION['user_notif'] = $user->notif;
 		$_SESSION['user_nbr'] = $user->number;
+		$_SESSION['token'] = bin2hex(random_bytes(32));
 		redirect('posts');
 	}
 
@@ -266,6 +273,7 @@ class Users extends Controller {
 		$_SESSION['user_img'] = $data['image'];
 		$_SESSION['user_notif'] = $data['notif'];
 		$_SESSION['user_nbr'] = $data['number'];
+		$_SESSION['token'] = bin2hex(random_bytes(32));
 		redirect('posts');
 	}
 

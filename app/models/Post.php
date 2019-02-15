@@ -47,6 +47,12 @@ class Post {
 		return $this->db->resultSet();
 	}
 
+	public function getUserPosts($id) {
+		$this->db->query('SELECT * FROM posts WHERE user_id = :user_id ORDER BY created_at DESC');
+		$this->db->bind(':user_id', $id);
+		return $this->db->resultSet();
+	}
+
 	public function addPost($data) {
 		$this->db->query('INSERT INTO posts (user_id, img) VALUES (:user_id, :img)');
 		$this->db->bind(':img', $data['image']);

@@ -9,6 +9,7 @@
 				<div class="up">
 					<?php if ($data['post']->user_id == $_SESSION['user_id']) : ?>
 						<form action="<?php echo URLROOT; ?>/posts/delete/<?php echo $data['post']->id; ?>" method="post">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<button type="submit" class="main_img-details_del">
 								<i class="fa fa-trash" aria-hidden="true"></i>
 							</button>
@@ -22,6 +23,7 @@
 					<form action="<?php echo $data['url']; ?>" method="post" class="down">
 						<!-- <span class="like_count"><?php //echo $data['post']->cmntCount; ?></span> -->
 						<input type="hidden" name="like" value="<?php echo $data['userLikes']; ?>">
+						<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 						<button type="submit" class="main_img-details_like <?php echo $data['userLikes'] != 0 ? 'active' : ''; ?>">
 							<i class="fa fa-thumbs-up" aria-hidden="true"></i>
 						</button>
@@ -46,6 +48,7 @@
 							<form method="post" action="<?php echo URLROOT.'/posts/cmnt_del/'.$cmnt->cmntId ?>" class="cmnt-del">
 								<input type="hidden" name="comment" value="<?php echo $cmnt->cmntId; ?>">
 								<input type="hidden" name="post_id" value="<?php echo $data['post']->id; ?>">
+								<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 								<button type="submit" class="cmnt-del_btn">
 									<i class="fa fa-times-circle" aria-hidden="true"></i>
 								</button>
@@ -65,6 +68,7 @@
 					<form action="<?php echo URLROOT.'/posts/show/'.$data['post']->id; ?>" method="post" class="ml-3 cmnt-input">
 						<div class="form-group m-0">
 							<input type="text" name="comment" id="comment" class="form-control form-control-lg <?php echo (!empty($data['comment_err'])) ? 'is-invalid' : ''; ?>" placeholder="Write a comment...">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<button type="submit" class="cmnt-submit">
 								<span class="fa fa-paper-plane cmnt-submit_icon"></span>
 							</button>
