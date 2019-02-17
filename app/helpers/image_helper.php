@@ -3,10 +3,7 @@
 function resize_image($url, $width, $height) {
 	list($width_orig, $height_orig) = getimagesize($url);
 	$ratio_orig = $width_orig / $height_orig;
-	if ($width / $height > $ratio_orig)
-		$width = $height * $ratio_orig;
-	else
-		$height = $width / $ratio_orig;
+	$height = $width / $ratio_orig;
 	$src = imagecreatefromstring(file_get_contents($url));
 	$dst = imagecreatetruecolor($width, $height);
 	imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);

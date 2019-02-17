@@ -139,6 +139,7 @@ body>.container {
 }
 
 .canvas_sup {
+	pointer-events: none;
 	display: block;
 	position: absolute;
 	top: 50%;
@@ -148,6 +149,7 @@ body>.container {
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	-moz-transform: translate(-50%, -50%);
+	transition: all .1s ease-in;
 }
 
 .photo {
@@ -334,6 +336,8 @@ input[type=radio]:checked+label {
 .main_img-details_del,
 .main_img-details_like,
 .like_count {
+	background: none;
+	border: none;
 	padding: .5rem 1rem;
 	color: rgba(255, 255, 255, .4);
 	font-size: 3rem;
@@ -344,8 +348,19 @@ input[type=radio]:checked+label {
 	-moz-transition: all .3s ease-in-out;
 }
 
+.main_img-details_like {
+	font-size: 4rem;
+}
+
 .main_img-details_like.active {
 	color: #417fff;
+}
+
+.main_img-details_back {
+	-webkit-box-ordinal-group: 0;
+	-ms-flex-order: -1;
+	order: -1;
+	margin-right: auto;
 }
 
 .like_count {
@@ -363,6 +378,8 @@ input[type=radio]:checked+label {
 	-moz-transform: scale(1.2);
 }
 
+.main_img-details_del:focus,
+.main_img-details_back:focus,
 .main_img-details_like:focus {
 	outline: none;
 }
@@ -373,23 +390,6 @@ input[type=radio]:checked+label {
 	transform: rotate(-180deg) scale(.85) translateY(-1rem);
 	-webkit-transform: rotate(-180deg) scale(.85) translateY(-1rem);
 	-moz-transform: rotate(-180deg) scale(.85) translateY(-1rem);
-}
-
-.main_img-details_like {
-	font-size: 4rem;
-}
-
-.main_img-details_back {
-	-webkit-box-ordinal-group: 0;
-	-ms-flex-order: -1;
-	order: -1;
-	margin-right: auto;
-}
-
-.main_img-details_del,
-.main_img-details_like {
-	background: none;
-	border: none;
 }
 
 .main_img-container:hover .main_img-details {
@@ -775,6 +775,17 @@ input[type=radio]:checked+label {
 
 .alert {
 	border-radius: 2rem;
+	position: relative;
+	transition: all .3s ease;
+}
+
+.flash-del {
+	position: absolute;
+	top: 4px;
+	right: -10px;
+	font-size: 1.5rem;
+	transform: translate(-50%, -50%);
+	cursor: pointer;
 }
 
 .form-group {
@@ -798,6 +809,11 @@ input[type=radio]:checked+label {
 
 .footer {
 	background-color: #343A40;
+}
+
+.footer a {
+	text-decoration: none;
+	color: #F2F3F5;
 }
 
 .navbar-nav {

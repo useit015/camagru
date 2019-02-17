@@ -2,9 +2,14 @@
 
 class Pages extends Controller {
 
+	public function setup() {
+		$this->setupModel = $this->model('Setup');
+		$this->setupModel->execute();
+		redirect('posts');
+	}
+
 	public function index() {
-		// if (isLoggedIn())
-			redirect('posts');
+		redirect('posts');
 		$data = [
 			'title' => 'Camagru',
 			'description' => 'Simple instagram like app'

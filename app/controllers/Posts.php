@@ -1,19 +1,11 @@
 <?php
 
 class Posts extends Controller {
-	private $perPage = 6;
+	private $perPage = 5;
 
 	public function __construct() {
 		$this->postModel = $this->model('Post');
 		$this->userModel = $this->model('User');
-	}
-
-	public function pages($page) {
-		header('Content-type: text/json');
-		$posts = $this->postModel->getPostsN($page, $this->perPage);
-		foreach ($posts as $post)
-			$post->postCreated = time_elapsed_string($post->postCreated);
-		echo json_encode($posts);
 	}
 
 	public function index() {
@@ -22,6 +14,16 @@ class Posts extends Controller {
 			'posts' => $posts
 		];
 		$this->view('posts/index', $data);
+	}
+
+	public function pages($page = -1) {
+		if ($page !== -1) {
+			header('Content-type: text/json');
+			$posts = $this->postModel->getPostsN($page, $this->perPage);
+			foreach ($posts as $post)
+				$post->postCreated = time_elapsed_string($post->postCreated);
+			echo json_encode($posts);
+		}
 	}
 
 	public function add($id = -1) {
@@ -92,8 +94,10 @@ class Posts extends Controller {
 							$this->view('posts/show', $data);
 						} elseif ($this->postModel->addComment($comment)) {
 							$data['comments'] = $this->postModel->getPostComments($id);
-							if ($data['user']->notif)
-								sendCommentNotification($data['user']->email, $data['url']);
+							if ($data['user']->notif) {
+								$mail = new Mailer('comment_notif', $data['user']->email, $data['url']);
+								$mail->send();
+							}
 							flash('post_message', 'Comment Added');
 							$this->view('posts/show', $data);
 						} else
@@ -116,8 +120,10 @@ class Posts extends Controller {
 								if ($this->postModel->addLike($like)) {
 									$data['userLikes'] = 1;
 									$data['likes'] = $this->postModel->getPostLikes($id);
-									if ($data['user']->notif)
-										sendLikeNotification($data['user']->email, $data['url']);
+									if ($data['user']->notif) {
+										$mail = new Mailer('like_notif', $data['user']->email, $data['url']);
+										$mail->send();
+									}
 									flash('post_message', 'Like Added');
 									$this->view('posts/show', $data);
 								} else

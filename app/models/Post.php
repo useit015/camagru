@@ -2,7 +2,7 @@
 
 class Post {
 	private $db;
-	private $allowed = ['jpg', 'jpeg', 'png', 'pdf'];
+	private $allowed = ['jpg', 'jpeg', 'png'];
 
 	public function __construct() {
 		$this->db = new Database();
@@ -155,13 +155,12 @@ class Post {
 		$err = $file['err'];
 		$type = $file['type'];
 		$ext = strtolower(end(explode('.', $name)));
-		if (in_array($ext, $this->allowed) && !$err && $size < 5000000) {
+		if (in_array($ext, $this->allowed) && !$err && $size < 1000000) {
 			$dest = 'uploads/'.uniqid('', true).'.'.$ext;
 			move_uploaded_file($tmpName, dirname(dirname(APPROOT)).'/'.$dest);
 			return $dest;
-		} else {
+		} else
 			return false;
-		}
 	}
 
 	function saveImage64($data){

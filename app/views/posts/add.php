@@ -52,7 +52,7 @@
 				</div>
 			</div>
 			<div class="row mb-2">
-				<div class="col-md-8">
+				<div class="col-md-8 filters_container">
 						<div class="row my-2 mb-3 justify-content-around">
 							<div class="form-group col-md-3 my-2">
 								<label for="red">Red:</label>
@@ -82,11 +82,9 @@
 							</div>
 						</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col">
 					<a href="#" class="btn btn-block btn-lg btn-light reset-filters my-4">Reset filters</a>
 					<a href="#" class="btn btn-block btn-lg btn-light capture-mode my-4">Switch to retro</a>
-				</div>
-				<div class="col-md-6">
 				</div>
 			</div>
 			<div class="row mb-2">

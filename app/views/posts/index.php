@@ -1,13 +1,13 @@
 <?php require APPROOT.'/views/inc/header.php'; ?>
 
+	<div class="row my-4">
+		<div class="col">
+			<h1 class="text-center display-2">Gallery</h1>
+		</div>
+	</div>
 	<?php flash('post_message'); ?>
 	<?php flash('email_changed'); ?>
 	<?php flash('password_changed'); ?>
-	<div class="row my-4">
-		<div class="col">
-			<h1 class="text-center">Gallery</h1>
-		</div>
-	</div>
 	<div class="gallery mb-5">
 		<?php foreach($data['posts'] as $post) : ?>
 			<div class="gallery-item">

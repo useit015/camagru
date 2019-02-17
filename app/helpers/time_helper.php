@@ -2,8 +2,7 @@
 
 function time_elapsed_string($datetime) {
 	$now = new DateTime;
-	$ago = new DateTime($datetime);
-	$diff = $now->diff($ago);
+	$diff = $now->diff(new DateTime($datetime));
 	$diff->w = floor($diff->d / 7);
 	$diff->d -= $diff->w * 7;
 	$string = [
@@ -13,7 +12,7 @@ function time_elapsed_string($datetime) {
 		'd' => 'day',
 		'h' => 'hour',
 		'i' => 'minute',
-		's' => 'second',
+		's' => 'second'
 	];
 	foreach ($string as $k => &$v) {
 		if ($diff->$k)

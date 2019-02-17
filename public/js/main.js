@@ -11,6 +11,7 @@ const uploadBtnType = document.querySelector('.form-group.upload-grp');
 const captureBtnType = document.querySelector('.form-group.capture-grp');
 const captureBtn = document.querySelector('.capture-btn');
 const resetFilter = document.querySelector('.reset-filters');
+const filterContainer = document.querySelector('.filters_container');
 const radios = document.querySelectorAll('.form-check-input.sup');
 const canvasSup = document.querySelector('.canvas_sup');
 const overlay = document.querySelector('.overlay');
@@ -20,6 +21,8 @@ const likesBox = document.querySelector('.likes-box');
 const changePassword = document.querySelector('.settings-change_password');
 const notifCheck = document.querySelector('#notif');
 const notifLabel = document.querySelector('.form-check-label.notif');
+const likeCounter = document.querySelector('.likes-counter');
+const flashDelBtn = document.querySelector('.flash-del');
 let typeCapture = true;
 let captureFlag = true;
 let pictureIsAllowed = false;
@@ -41,12 +44,14 @@ function getVideo(video) {
 
 function drawInCanvas() {
 	const ctx = canvas.getContext('2d');
+	ctx.scale(-1, 1);
 	const width = video.videoWidth;
 	const height = video.videoHeight;
 	canvas.width = width;
 	canvas.height = height;
+	ctx.scale(-1, 1);
 	intervalId = setInterval(() => {
-		ctx.drawImage(video, 0, 0, width, height);
+		ctx.drawImage(video, -width, 0, width, height);
 		let pixels = ctx.getImageData(0, 0, width, height);
 		ctx.putImageData(jsEffect(pixels), 0, 0);
 	}, 16);
@@ -124,6 +129,10 @@ if (imgInput) {
 	imgInput.addEventListener('change', e => {
 		const fileName = e.target.value.split("\\");
 		const name = fileName[fileName.length - 1];
+		if (!['jpg', 'jpeg', 'png'].includes(name.split('.')[name.split('.').length - 1])) {
+			e.target.value = '';
+			return;
+		}
 		customUpload.innerHTML = name.length <= 20 ? name : name.substring(0, 20) + '...';
 		if (canvas) {
 			let img = new Image();
@@ -131,7 +140,12 @@ if (imgInput) {
 				const ctx = canvas.getContext('2d');
 				clearInterval(intervalId);
 				intervalId = 0;
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.clearRect(-canvas.width, 0, canvas.width, canvas.height);
+				const r = img.width / img.height;
+				if (canvas.width / canvas.height > r)
+					canvas.width = canvas.height * r;
+				else
+					canvas.height = canvas.width / r;	
 				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 				pictureIsAllowed = true;
 				captureBtn.disabled = allowPic(pictureIsAllowed);
@@ -165,26 +179,22 @@ if (capture)
 if (type) {
 	type.addEventListener('click', () => {
 		if (typeCapture) {
+			uploadIcon.style.display = 'block';
 			uploadBtnType.style.display = 'block';
 			captureBtnType.style.display = 'none';
-			uploadIcon.style.display = 'block';
+			resetFilter.style.display = 'none';
+			filterContainer.style.display = 'none';
 			type.innerHTML = 'Switch to camera';
 			stopRender();
 			captureFlag = true;
-			canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+			canvas.getContext('2d').clearRect(-canvas.width, 0, canvas.width, canvas.height);
 			typeInput.value = 'retro';
-			document.querySelectorAll('.form-control-range').forEach(cur => {
-				cur.value = 0;
-				cur.disabled = 1;
-			});
-			document.querySelectorAll('.form-check-input').forEach(cur => {
-				cur.checked = 0;
-				cur.disabled = 1;
-			});
 		} else {
 			uploadBtnType.style.display = 'none';
 			captureBtnType.style.display = 'block';
 			uploadIcon.style.display = 'none';
+			resetFilter.style.display = 'block';
+			filterContainer.style.display = 'block';
 			stopRender();
 			drawInCanvas();
 			capture.textContent = 'Capture';
@@ -215,8 +225,9 @@ if (radios) {
 
 if (canvas) {
 	canvas.addEventListener('click', e => {
+		let r = e.target.offsetWidth / e.target.offsetHeight;
 		document.querySelector('#x').value = e.offsetX.map(0, e.target.offsetWidth, 0, 800);
-		document.querySelector('#y').value = e.offsetY.map(0, e.target.offsetHeight, 0, 600);
+		document.querySelector('#y').value = e.offsetY.map(0, e.target.offsetHeight, 0, 800 / r);
 		canvasSup.style.left = `${e.offsetX}px`;
 		canvasSup.style.top = `${e.offsetY}px`;
 	});
@@ -243,3 +254,9 @@ if (changePassword)
 
 if (notifCheck)
 	notifCheck.addEventListener('change', () => notifCheck.value = notifCheck.value == 'check' ? 'uncheck' : 'check');
+
+if (likeCounter)
+	likeCounter.style.display = likeCounter.textContent == '0 Like' ? 'none' : 'block';
+
+if (flashDelBtn)
+	flashDelBtn.addEventListener('click', () => document.querySelector('.alert').style.display = 'none');

@@ -1,14 +1,10 @@
 <?php
 
-// DB Params
-define('DB_HOST', '172.18.0.2');
-define('DB_USER', 'root');
-define('DB_PASS', 'root');
-define('DB_PORT', 3306);
-define('DB_NAME', 'camagru');
+require_once 'database.php';
 
 // App Root
 define('APPROOT', dirname(dirname(__FILE__)));
+
 // Public Root
 define('PUBROOT', dirname(dirname(dirname(__FILE__))).'/public');
 
