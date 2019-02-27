@@ -25,6 +25,17 @@ class UsersHelper {
 		$_SESSION['token'] = bin2hex(random_bytes(32));
 	}
 
+	public function destroySession() {
+		unset($_SESSION['user_id']);
+		unset($_SESSION['user_email']);
+		unset($_SESSION['user_name']);
+		unset($_SESSION['user_nbr']);
+		unset($_SESSION['user_notif']);
+		unset($_SESSION['user_img']);
+		unset($_SESSION['token']);
+		session_destroy();
+	}
+
 	public function validatePassword($password) {
 		if (empty($password)) {
 			return 'Password shall not be empty';

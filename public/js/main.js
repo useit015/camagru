@@ -179,29 +179,23 @@ if (capture)
 if (type) {
 	type.addEventListener('click', () => {
 		if (typeCapture) {
-			uploadIcon.style.display = 'block';
-			uploadBtnType.style.display = 'block';
-			captureBtnType.style.display = 'none';
-			resetFilter.style.display = 'none';
-			filterContainer.style.display = 'none';
+			[uploadBtnType, uploadIcon].forEach(cur => cur.style.display = 'block');
+			[captureBtnType, resetFilter, filterContainer].forEach(cur => cur.style.display = 'none');
 			type.innerHTML = 'Switch to camera';
 			stopRender();
 			captureFlag = true;
 			canvas.getContext('2d').clearRect(-canvas.width, 0, canvas.width, canvas.height);
 			typeInput.value = 'retro';
 		} else {
-			uploadBtnType.style.display = 'none';
-			captureBtnType.style.display = 'block';
-			uploadIcon.style.display = 'none';
-			resetFilter.style.display = 'block';
-			filterContainer.style.display = 'block';
 			stopRender();
 			drawInCanvas();
-			capture.textContent = 'Capture';
 			imgInput.value = '';
-			customUpload.innerHTML = 'Upload Image';
-			type.innerHTML = 'Switch to retro';
 			typeInput.value = 'camera';
+			capture.textContent = 'Capture';
+			type.innerHTML = 'Switch to retro';
+			customUpload.innerHTML = 'Upload Image';
+			[uploadBtnType, uploadIcon].forEach(cur => cur.style.display = 'none');
+			[captureBtnType, resetFilter, filterContainer].forEach(cur => cur.style.display = 'block');
 			document.querySelectorAll('.form-control-range').forEach(cur => cur.disabled = 0);
 			document.querySelectorAll('.form-check-input').forEach(cur => cur.disabled = 0);
 		}

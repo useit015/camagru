@@ -1,7 +1,7 @@
 <?php
 
 /*/
-/* URL FORMAT - /controller/method/params
+/*--> URL FORMAT - /controller/method/params
 /*/
 
 class Core {

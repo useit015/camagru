@@ -21,7 +21,6 @@
 				</div>
 				<?php if ($_SESSION['user_id']) : ?>
 					<form action="<?php echo $data['url']; ?>" method="post" class="down">
-						<!-- <span class="like_count"><?php //echo $data['post']->cmntCount; ?></span> -->
 						<input type="hidden" name="like" value="<?php echo $data['userLikes']; ?>">
 						<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 						<button type="submit" class="main_img-details_like <?php echo $data['userLikes'] != 0 ? 'active' : ''; ?>">

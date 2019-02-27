@@ -117,8 +117,11 @@ class User {
 		$type = $file['type'];
 		$ext = strtolower(end(explode('.', $name)));
 		if (in_array($ext, $this->allowed) && !$err && $size < 1000000) {
+			$root = dirname(dirname(APPROOT));
+			if (!file_exists($root.'/uploads'))
+				exec('mkdir -p '.$root.'/uploads');
 			$dest = 'uploads/'.$user.'-'.uniqid('', true).'.'.$ext;
-			move_uploaded_file($tmpName, dirname(dirname(APPROOT)).'/'.$dest);
+			move_uploaded_file($tmpName, $root.'/'.$dest);
 			return $dest;
 		} else
 			return false;

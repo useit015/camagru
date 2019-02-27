@@ -252,16 +252,8 @@ class Users extends Controller {
 	}
 
 	public function logout() {
-		if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] == $_SESSION['token']) {
-			unset($_SESSION['user_id']);
-			unset($_SESSION['user_email']);
-			unset($_SESSION['user_name']);
-			unset($_SESSION['user_nbr']);
-			unset($_SESSION['user_notif']);
-			unset($_SESSION['user_img']);
-			unset($_SESSION['token']);
-			session_destroy();
-		}
+		if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] == $_SESSION['token'])
+			$this->h->destroySession();
 		redirect('users/login');
 	}
 

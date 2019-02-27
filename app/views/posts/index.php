@@ -19,7 +19,6 @@
 						</div>
 						<h5><?php echo $post->userName; ?><span><?php  echo time_elapsed_string($post->postCreated); ?></span></h5>
 					</div>
-					<h5></h5>
 					<div class="gallery-item-details_like">
 						<i class="fa fa-thumbs-up gallery-item-details_like-icon px-2"></i>
 						<span><?php echo $post->postLikeCount; ?></span>
